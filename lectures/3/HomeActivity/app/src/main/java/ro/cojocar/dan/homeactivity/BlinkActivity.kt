@@ -1,10 +1,13 @@
 package ro.cojocar.dan.homeactivity
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Button
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManager
+import kotlinx.android.synthetic.main.blink.*
 import java.io.IOException
 
 
@@ -30,7 +33,7 @@ import java.io.IOException
  */
 class BlinkActivity : Activity() {
   private companion object {
-    const val LED_PIN_NAME = "GPIO2_IO02" // GPIO port wired to the LED
+    const val LED_PIN_NAME = "BCM6" // GPIO port wired to the LED
     const val INTERVAL_BETWEEN_BLINKS_MS = 1000L
   }
 
@@ -40,6 +43,7 @@ class BlinkActivity : Activity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setContentView(R.layout.blink)
 
     // Step 1. Create GPIO connection.
     val manager = PeripheralManager.getInstance()
@@ -50,8 +54,22 @@ class BlinkActivity : Activity() {
 
       // Step 4. Repeat using a handler.
       mHandler.post(blinkRunnable)
+      toggle.text = getString(R.string.stop)
     } catch (e: IOException) {
       loge("Error on PeripheralIO API", e)
+    }
+    toggle.setOnClickListener {
+      val button = it as Button
+      if (button.text.contains("Stop")) {
+        mHandler.removeCallbacks(blinkRunnable)
+        ledGpio.value = false
+        button.text = getString(R.string.start)
+        toggle.setBackgroundColor(Color.GRAY)
+      } else {
+        mHandler.post(blinkRunnable)
+        button.text = getString(R.string.stop)
+      }
+      logd("Toggle the status!")
     }
   }
 
@@ -60,6 +78,12 @@ class BlinkActivity : Activity() {
       try {
         // Step 3. Toggle the LED state
         ledGpio.value = !ledGpio.value
+        if (ledGpio.value) {
+          toggle.setBackgroundColor(Color.GREEN)
+        } else {
+          toggle.setBackgroundColor(Color.GRAY)
+        }
+
         // Step 4. Schedule another event after delay.
         mHandler.postDelayed(this, INTERVAL_BETWEEN_BLINKS_MS)
       } catch (e: IOException) {
