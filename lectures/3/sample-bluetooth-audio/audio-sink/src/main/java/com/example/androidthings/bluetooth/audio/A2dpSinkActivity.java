@@ -35,6 +35,7 @@ import com.google.android.things.contrib.driver.button.ButtonInputDriver;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -225,7 +226,7 @@ public class A2dpSinkActivity extends Activity {
         List<Integer> enabledProfiles = bluetoothProfileManager.getEnabledProfiles();
         if (!enabledProfiles.contains(A2dpSinkHelper.A2DP_SINK_PROFILE)) {
             Log.d(TAG, "Enabling A2dp sink mode.");
-            List<Integer> toDisable = Arrays.asList(BluetoothProfile.A2DP);
+            List<Integer> toDisable = Collections.singletonList(BluetoothProfile.A2DP);
             List<Integer> toEnable = Arrays.asList(
                 A2dpSinkHelper.A2DP_SINK_PROFILE,
                 A2dpSinkHelper.AVRCP_CONTROLLER_PROFILE);

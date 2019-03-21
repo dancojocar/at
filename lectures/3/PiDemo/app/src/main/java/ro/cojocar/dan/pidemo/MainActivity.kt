@@ -76,7 +76,7 @@ class MainActivity : Activity() {
 class Display(private val display: AlphanumericDisplay = AlphanumericDisplay(Display.DISPLAY_I2C_BUS)) : Closeable {
 
     companion object {
-        val DISPLAY_I2C_BUS = "I2C1"
+        const val DISPLAY_I2C_BUS = "I2C1"
     }
 
     init {
