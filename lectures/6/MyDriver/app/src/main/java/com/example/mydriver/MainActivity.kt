@@ -2,6 +2,8 @@ package com.example.mydriver
 
 import android.app.Activity
 import android.os.Bundle
+import kotlinx.coroutines.*
+import java.util.*
 
 /**
  * Skeleton of an Android Things activity.
@@ -31,6 +33,19 @@ class MainActivity : Activity() {
         sensor = LEDSensor()
         sensor.init()
         sensor.write(blue = true)
+        GlobalScope.launch {
+            var nextInt = 0;
+            repeat(100) {
+                delay(1000)
+                val random = Random()
+                val oldColor = nextInt;
+                while (nextInt == oldColor) {
+                    nextInt = random.nextInt(3)
+                }
+                logd("Changing color to: $nextInt")
+                sensor.write(red = nextInt == 0, green = nextInt == 1, blue = nextInt == 2)
+            }
+        }
     }
 
     override fun onDestroy() {
