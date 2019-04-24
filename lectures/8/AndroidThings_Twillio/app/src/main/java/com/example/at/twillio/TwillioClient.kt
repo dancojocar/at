@@ -14,8 +14,6 @@ import okhttp3.Response
 
 object TwillioClient {
 
-  private const val TWILLIO_ACCOUNT_SID = "AC0ea0eb1377fa7fb0dadbf3bfdfa5562a"
-  private const val TWILLIO_AUTH_TOKEN = "9a2fcefc90170dfe8a8b3774e2bff7bb"
 
   private const val TWILLIO_BASE_URL = "https://api.twilio.com/2010-04-01/Accounts/$TWILLIO_ACCOUNT_SID"
   private const val TWILLIO_MESSAGE_URL = "$TWILLIO_BASE_URL/Messages.json"
