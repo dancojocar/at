@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="ro.cojocar.dan.helloworld">
+  package="ro.cojocar.pwmdemo">
 
   <uses-permission android:name="com.google.android.things.permission.USE_PERIPHERAL_IO" />
 
