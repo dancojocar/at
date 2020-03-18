@@ -29,91 +29,92 @@ import java.io.IOException
  *
  */
 class MainActivity : Activity() {
-    companion object {
-        private const val PWM_NAME = "PWM1"
+  companion object {
+    private const val PWM_NAME = "PWM1"
+  }
+
+  private var pwm: Pwm? = null
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    val manager = PeripheralManager.getInstance()
+    val portList: List<String> = manager.pwmList
+    if (portList.isEmpty()) {
+      logi("No PWM port available on this device.")
+    } else {
+      logi("List of available ports: $portList")
     }
 
-    private var pwm: Pwm? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val manager = PeripheralManager.getInstance()
-        val portList: List<String> = manager.pwmList
-        if (portList.isEmpty()) {
-            logi("No PWM port available on this device.")
-        } else {
-            logi("List of available ports: $portList")
-        }
-
-        // Attempt to access the PWM port
-        pwm = try {
-            PeripheralManager.getInstance()
-                .openPwm(PWM_NAME)
-        } catch (e: IOException) {
-            logw("Unable to access $PWM_NAME", e)
-            null
-        }
-        initButton.setOnClickListener {
-            logi("Initialize $PWM_NAME")
-            initializePwm(pwm!!)
-        }
-
-        frequency.min = 1
-        frequency.max = 50
-        frequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            var progress = 0;
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                pwm?.setPwmFrequencyHz(progress.toDouble())
-                logi("frequency set to: $progress")
-            }
-
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                this.progress = progress
-            }
-        })
-
-        duty.min = 0
-        duty.max = 100
-        duty.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            var progress = 0;
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                pwm?.setPwmDutyCycle(progress.toDouble())
-                logi("dutyCycle set to: $progress")
-            }
-
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                this.progress = progress
-            }
-        })
+    // Attempt to access the PWM port
+    pwm = try {
+      PeripheralManager.getInstance().openPwm(PWM_NAME)
+    } catch (e: IOException) {
+      logw("Unable to access $PWM_NAME", e)
+      null
     }
 
 
-    @Throws(IOException::class)
-    fun initializePwm(pwm: Pwm) {
-        frequency.progress = 50
-        duty.progress = 50
-        pwm.apply {
-            setPwmFrequencyHz(frequency.progress.toDouble())
-            setPwmDutyCycle(duty.progress.toDouble())
-            // Enable the PWM signal
-            setEnabled(true)
-        }
+    initButton.setOnClickListener {
+      logi("Initialize $PWM_NAME")
+      initializePwm(pwm!!)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            pwm?.close()
-            pwm = null
-        } catch (e: IOException) {
-            logw("Unable to close $PWM_NAME", e)
-        }
+    frequency.min = 1
+    frequency.max = 50
+    frequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      var progress = 0;
+      override fun onStartTrackingTouch(seekBar: SeekBar?) {
+      }
+
+      override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        pwm?.setPwmFrequencyHz(progress.toDouble())
+        logi("frequency set to: $progress")
+      }
+
+      override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        this.progress = progress
+      }
+    })
+
+    duty.min = 0
+    duty.max = 100
+    duty.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      var progress = 0;
+      override fun onStartTrackingTouch(seekBar: SeekBar?) {
+      }
+
+      override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        pwm?.setPwmDutyCycle(progress.toDouble())
+        logi("dutyCycle set to: $progress")
+      }
+
+      override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        this.progress = progress
+      }
+    })
+  }
+
+  @Throws(IOException::class)
+  fun initializePwm(pwm: Pwm) {
+    frequency.progress = 50
+    duty.progress = 50
+    pwm.apply {
+      setPwmFrequencyHz(frequency.progress.toDouble())
+      setPwmDutyCycle(duty.progress.toDouble())
+      // Enable the PWM signal
+      setEnabled(true)
     }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    try {
+      pwm?.setEnabled(false)
+      pwm?.close()
+      pwm = null
+    } catch (e: IOException) {
+      logw("Unable to close $PWM_NAME", e)
+    }
+  }
 }
