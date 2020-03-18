@@ -15,6 +15,8 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
   buildToolsVersion "28.0.3"
@@ -37,4 +39,8 @@ android {
 dependencies {
   compileOnly 'com.google.android.things:androidthings:1.0'
   implementation 'com.google.android.things.contrib:driver-button:1.0'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+  mavenCentral()
 }
