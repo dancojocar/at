@@ -4,34 +4,29 @@ import java.util.*
 
 class ReadSensorsTask(val arduino: Arduino) : TimerTask() {
 
-    override fun run() {
-        readHumidity()
-        Thread.sleep(2000)
-        readTemp()
-        Thread.sleep(2000)
-        readAir()
-    }
+  companion object {
+    private const val OPERATION_DELAY = 2000L
+    private const val READ_DELAY = 500L
+  }
 
+  override fun run() {
+    readHumidity()
+    Thread.sleep(OPERATION_DELAY)
+    readTemp()
+    Thread.sleep(OPERATION_DELAY)
+  }
 
-    private fun readHumidity() {
-        arduino.write("H")
-        Thread.sleep(200)
-        val humidity = arduino.read()
-        logi("Humidity $humidity%")
-    }
+  private fun readHumidity() {
+    arduino.write("H")
+    Thread.sleep(READ_DELAY)
+    val humidity = arduino.read()
+    logi("Humidity ${humidity}%")
+  }
 
-    private fun readTemp() {
-        arduino.write("T")
-        Thread.sleep(200)
-        val output = arduino.read()
-        logi("Temperature ${output}C")
-    }
-
-    private fun readAir() {
-        arduino.write("A")
-        Thread.sleep(200)
-        val output = arduino.read()
-        logi("Air: ${output} ppm")
-    }
-
+  private fun readTemp() {
+    arduino.write("T")
+    Thread.sleep(READ_DELAY)
+    val temp = arduino.read()
+    logi("Temperature ${temp}C")
+  }
 }

@@ -27,30 +27,30 @@ import java.util.*
  */
 class MainActivity : Activity() {
 
-    private lateinit var arduino: Arduino
-    private val readSensorsTimer = Timer("ReadSensorsTimer", true)
+  private lateinit var arduino: Arduino
+  private val readSensorsTimer = Timer("ReadSensorsTimer", true)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        val manager = PeripheralManager.getInstance()
-        val deviceList: List<String> = manager.uartDeviceList
-        if (deviceList.isEmpty()) {
-            logi("No UART port available on this device.")
-        } else {
-            logi("List of available devices: $deviceList")
-        }
-
-        arduino = Arduino()
-        val time = 5L * 1000L
-        readSensorsTimer.scheduleAtFixedRate(ReadSensorsTask(arduino), 0L, time)
-
+    val manager = PeripheralManager.getInstance()
+    val deviceList: List<String> = manager.uartDeviceList
+    if (deviceList.isEmpty()) {
+      logi("No UART port available on this device.")
+    } else {
+      logi("List of available devices: $deviceList")
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        readSensorsTimer.cancel()
-        arduino.close()
-    }
+    arduino = Arduino()
+    val time = 5L * 1000L
+    readSensorsTimer.scheduleAtFixedRate(ReadSensorsTask(arduino), 0L, time)
+
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    readSensorsTimer.cancel()
+    arduino.close()
+  }
 }
