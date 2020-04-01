@@ -2,7 +2,9 @@ package com.example.mydriver
 
 import android.app.Activity
 import android.os.Bundle
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -35,7 +37,7 @@ class MainActivity : Activity() {
         sensor.write(blue = true)
         GlobalScope.launch {
             var nextInt = 0;
-            repeat(100) {
+            repeat(10) {
                 delay(1000)
                 val random = Random()
                 val oldColor = nextInt;
@@ -45,6 +47,7 @@ class MainActivity : Activity() {
                 logd("Changing color to: $nextInt")
                 sensor.write(red = nextInt == 0, green = nextInt == 1, blue = nextInt == 2)
             }
+            sensor.write(red = false, green = false, blue = false)
         }
     }
 
