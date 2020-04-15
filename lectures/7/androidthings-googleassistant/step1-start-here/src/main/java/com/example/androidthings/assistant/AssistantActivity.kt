@@ -23,6 +23,7 @@ import android.media.MediaRecorder.AudioSource
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Process
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.example.androidthings.assistant.shared.*
@@ -124,6 +125,7 @@ class AssistantActivity : Activity(), Button.OnButtonEventListener {
   private val mStartAssistantRequest = Runnable {
     logi("starting assistant request")
     mAudioRecord!!.startRecording()
+    logi("started recording")
     mAssistantRequestObserver = mAssistantService!!.assist(mAssistantResponseObserver)
     val converseConfigBuilder = AssistConfig.newBuilder()
         .setAudioInConfig(ASSISTANT_AUDIO_REQUEST_CONFIG)
@@ -181,7 +183,6 @@ class AssistantActivity : Activity(), Button.OnButtonEventListener {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     logi("starting assistant demo")
-
     setContentView(R.layout.activity_main)
     val assistantRequestsListView = findViewById<ListView>(R.id.assistantRequestsListView)
     mAssistantRequestsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
@@ -209,7 +210,7 @@ class AssistantActivity : Activity(), Button.OnButtonEventListener {
     }
 
     val manager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    val maxVolume = manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+    val maxVolume = manager.getStreamVolume(AudioManager.STREAM_MUSIC)
     logi("setting volume to: $maxVolume")
     manager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, 0)
     mOutputBufferSize = AudioTrack.getMinBufferSize(AUDIO_FORMAT_OUT_MONO.sampleRate,
@@ -244,6 +245,7 @@ class AssistantActivity : Activity(), Button.OnButtonEventListener {
   }
 
   override fun onButtonEvent(button: Button, pressed: Boolean) {
+    logi("Someone pressed the button")
     try {
       if (mLed != null) {
         mLed!!.value = pressed
