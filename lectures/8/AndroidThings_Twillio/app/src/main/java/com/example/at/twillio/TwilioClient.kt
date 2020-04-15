@@ -12,7 +12,7 @@ import okhttp3.Request
 import okhttp3.Response
 
 
-object TwillioClient {
+object TwilioClient {
 
 
   private const val TWILLIO_BASE_URL = "https://api.twilio.com/2010-04-01/Accounts/$TWILLIO_ACCOUNT_SID"

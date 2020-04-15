@@ -27,6 +27,7 @@ class MainActivity : Activity() {
       buttonGpio.setDirection(Gpio.DIRECTION_IN)
       buttonGpio.setEdgeTriggerType(Gpio.EDGE_BOTH)
       buttonGpio.registerGpioCallback(mCallback)
+      logd("The button was registered sucessfully!")
     } catch (e: IOException) {
       loge("Error on PeripheralIO API", e)
     }
@@ -34,14 +35,16 @@ class MainActivity : Activity() {
 
   private val mCallback = GpioCallback {
     val gpioValue = it.value
+    logd("Value: $gpioValue currentTime: ${System.nanoTime()}!")
     if (!gpioValue) {
       pressStartedAt = System.currentTimeMillis()
     } else {
       val duration = System.currentTimeMillis() - pressStartedAt
+      logd("Duration: $duration!")
       if (duration > LONG_PRESS_DELAY_MS) {
         logd("Long press")
-        TwillioClient.sms("Alert! the button was pressed!");
-//        TwillioClient.call()
+//        TwilioClient.sms("Alert! the button was pressed!");
+        TwilioClient.call()
       } else {
         logd("False alarm!")
       }

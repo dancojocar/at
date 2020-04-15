@@ -8,7 +8,7 @@ class LCDManager {
 
   fun displayString(data: String) {
     try {
-      logd("Writing")
+      logd("Writing: $data")
       if (mLcd == null)
         mLcd = Lcd1602(GPIO_LCD_RS, GPIO_LCD_EN, GPIO_LCD_D4, GPIO_LCD_D5, GPIO_LCD_D6, GPIO_LCD_D7)
       mLcd!!.clear()

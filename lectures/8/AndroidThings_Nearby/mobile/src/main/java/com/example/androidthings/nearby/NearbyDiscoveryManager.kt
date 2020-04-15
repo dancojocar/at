@@ -1,22 +1,10 @@
 package com.example.androidthings.nearby
 
 import android.content.Context
-
 import com.google.android.gms.nearby.Nearby
+import com.google.android.gms.nearby.connection.*
 
-import com.google.android.gms.nearby.connection.ConnectionInfo
-import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback
-import com.google.android.gms.nearby.connection.ConnectionResolution
-import com.google.android.gms.nearby.connection.ConnectionsStatusCodes
-import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
-import com.google.android.gms.nearby.connection.DiscoveryOptions
-import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback
-import com.google.android.gms.nearby.connection.Payload
-import com.google.android.gms.nearby.connection.PayloadCallback
-import com.google.android.gms.nearby.connection.PayloadTransferUpdate
-import com.google.android.gms.nearby.connection.Strategy
-
-class NearbyDsvManager(private val ctx: Context, private val listener: EventListener) {
+class NearbyDiscoveryManager(private val ctx: Context, private val listener: EventListener) {
 
   private lateinit var currentEndpoint: String
 
@@ -35,7 +23,7 @@ class NearbyDsvManager(private val ctx: Context, private val listener: EventList
   private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
     override fun onConnectionInitiated(s: String, connectionInfo: ConnectionInfo) {
       logi("Connected to endpoint [$s]")
-      this@NearbyDsvManager.currentEndpoint = s
+      this@NearbyDiscoveryManager.currentEndpoint = s
       Nearby.getConnectionsClient(ctx).acceptConnection(s, payloadCallback)
     }
 

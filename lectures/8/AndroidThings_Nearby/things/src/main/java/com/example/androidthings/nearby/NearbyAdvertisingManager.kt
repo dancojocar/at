@@ -1,19 +1,10 @@
 package com.example.androidthings.nearby
 
 import android.content.Context
-
 import com.google.android.gms.nearby.Nearby
-import com.google.android.gms.nearby.connection.AdvertisingOptions
-import com.google.android.gms.nearby.connection.ConnectionInfo
-import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback
-import com.google.android.gms.nearby.connection.ConnectionResolution
-import com.google.android.gms.nearby.connection.ConnectionsClient
-import com.google.android.gms.nearby.connection.Payload
-import com.google.android.gms.nearby.connection.PayloadCallback
-import com.google.android.gms.nearby.connection.PayloadTransferUpdate
-import com.google.android.gms.nearby.connection.Strategy
+import com.google.android.gms.nearby.connection.*
 
-class NearbyAdvManager(private val ctx: Context, private val listener: EventListener) {
+class NearbyAdvertisingManager(private val ctx: Context, private val listener: EventListener) {
   private val client: ConnectionsClient
 
   private val connectionLifeCycleCB = object : ConnectionLifecycleCallback() {
@@ -60,7 +51,7 @@ class NearbyAdvManager(private val ctx: Context, private val listener: EventList
         connectionLifeCycleCB,
         advertisingOptions)
         .addOnSuccessListener { logi("OnSuccess...") }
-        .addOnFailureListener { e -> loge("OnFailure: ", e) }
+        .addOnFailureListener { e -> loge("Constructor OnFailure: ", e) }
   }
   //adb -s Android.local shell am force-stop com.android.iotlauncher.ota
   //adb -s Android.local shell am force-stop com.example.androidthings.nearby
